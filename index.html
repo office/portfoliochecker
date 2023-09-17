@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            background-color: #333;
+        }
+        button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #content {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+    <!-- Include Web3.js from a CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.1.1/web3.min.js"></script>
+</head>
+<body>
+    <header>
+        <button id="signInBtn">Sign In with MetaMask</button>
+    </header>
+    <div id="content">
+        <h1>Welcome to Your Portfolio</h1>
+        <p>Your Ethereum Balance: <span id="ethBalance">-</span> ETH</p>
+    </div>
+
+    <script>
+        async function checkMetaMask() {
+            if (typeof window.ethereum === 'undefined') {
+                alert('MetaMask is not installed. Please install MetaMask to use this website.');
+                return;
+            }
+
+            try {
+                // Request account access
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                const address = accounts[0];
+                
+                // Display the user's Ethereum address
+                document.getElementById('content').innerHTML = `
+                    <h1>Welcome to Your Portfolio</h1>
+                    <p>Your Ethereum Address: ${address}</p>
+                    <p>Loading Ethereum Balance...</p>
+                `;
+
+                // Get the ETH balance
+                const balance = await web3.eth.getBalance(address);
+                const balanceEth = web3.utils.fromWei(balance, 'ether');
+
+                // Display the ETH balance
+                document.getElementById('ethBalance').textContent = balanceEth;
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred while connecting to MetaMask.');
+            }
+        }
+
+        document.getElementById('signInBtn').addEventListener('click', checkMetaMask);
+    </script>
+</body>
+</html>
