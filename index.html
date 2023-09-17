@@ -63,6 +63,8 @@
                     method: 'eth_getBalance',
                     params: [address, 'latest'],
                 });
+
+                // Convert the balance from Wei to Ether
                 const balanceEth = window.web3.utils.fromWei(balance, 'ether');
 
                 // Display the ETH balance
