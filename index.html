@@ -46,8 +46,7 @@
 
             try {
                 // Request account access
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const address = accounts[0];
 
                 // Display the user's Ethereum address
@@ -58,14 +57,14 @@
                     <p>Loading Ethereum Balance...</p>
                 `;
 
+                // Initialize Web3.js with the current provider (MetaMask)
+                const web3 = new Web3(window.ethereum);
+
                 // Get the ETH balance
-                const balance = await window.ethereum.request({
-                    method: 'eth_getBalance',
-                    params: [address, 'latest'],
-                });
+                const balance = await web3.eth.getBalance(address);
 
                 // Convert the balance from Wei to Ether
-                const balanceEth = window.web3.utils.fromWei(balance, 'ether');
+                const balanceEth = web3.utils.fromWei(balance, 'ether');
 
                 // Display the ETH balance
                 document.getElementById('ethBalance').textContent = balanceEth + " ETH";
